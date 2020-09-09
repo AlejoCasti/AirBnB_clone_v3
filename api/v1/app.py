@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 ''' API start '''
 
-from flask import Flask
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
 from os import environ
@@ -18,6 +18,12 @@ API_PORT = environ.get('HBNB_API_PORT')\
 def close(error):
     ''' close storage '''
     storage.close()
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    ''' page not found '''
+    return jsonify(error='NotFound'), 404
 
 
 if __name__ == '__main__':
