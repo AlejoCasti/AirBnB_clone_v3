@@ -38,7 +38,7 @@ def route_state_delete(id):
 def route_state_post():
     ''' post object '''
     req = request.get_json()
-    if (type(req) != dict):
+    if type(req) is not dict:
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
     if 'name' not in req:
         return make_response(jsonify({'error': 'Missing name'}), 400)
@@ -51,7 +51,7 @@ def route_state_put(id):
     ''' search a state with specific id '''
     ignore_values = ['id', 'created_at', 'updated_at']
     req = request.get_json()
-    if (type(req) != dict):
+    if type(req) is not dict:
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
     lista = [obj for obj in list(storage.all(State).values()) if obj.id == id]
     if len(lista) == 0:
