@@ -17,20 +17,20 @@ def route_state():
 @app_views.route('/states/<id>', strict_slashes=False, methods=['GET'])
 def route_state_id(id):
     ''' search a state with specific id '''
-    lista = [obj.to_dict() for obj in list(storage.all(State).values())
-             if obj.id == id]
-    if len(lista) == 0:
+    obj = storage.get(State, id)
+    if obj is None:
         abort(404)
-    return jsonify(lista[0])
+    return jsonify(obj.to_dict())
 
 
 @app_views.route('/states/<id>', strict_slashes=False, methods=['DELETE'])
 def route_state_delete(id):
     ''' delete object '''
-    lista = [obj for obj in list(storage.all(State).values()) if obj.id == id]
-    if len(lista) == 0:
+    obj = storage.get(State, id)
+    if obj is None:
         abort(404)
-    lista[0].delete()
+    obj.delete()
+    storage.save()
     return jsonify({}), 200
 
 
@@ -42,7 +42,8 @@ def route_state_post():
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
     if 'name' not in req:
         return make_response(jsonify({'error': 'Missing name'}), 400)
-    state = State(req)
+    state = State(**req)
+    state.save()
     return jsonify(state.to_dict()), 201
 
 
@@ -53,10 +54,11 @@ def route_state_put(id):
     req = request.get_json()
     if type(req) is not dict:
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
-    lista = [obj for obj in list(storage.all(State).values()) if obj.id == id]
-    if len(lista) == 0:
+    obj = storage.get(State, id)
+    if obj is None:
         abort(404)
     for key, value in req.items():
         if key not in ignore_values:
-            setattr(lista[0], key, value)
-    return jsonify(lista[0].to_dict()), 200
+            setattr(obj, key, value)
+    storage.save()
+    return jsonify(obj.to_dict()), 200
