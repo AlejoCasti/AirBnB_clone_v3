@@ -9,14 +9,6 @@ from models.user import User
 from json import loads
 
 
-@app_views.route('/places', strict_slashes=False, methods=['GET'])
-def route_places():
-    ''' all user's object '''
-    users = list(storage.all(Place).values())
-    dic = [obj.to_dict() for obj in users]
-    return jsonify(dic)
-
-
 @app_views.route('/cities/<id>/places', strict_slashes=False, methods=['GET'])
 def route_state_place(id):
     ''' all place's object '''
