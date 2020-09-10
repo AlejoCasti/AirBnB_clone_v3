@@ -48,15 +48,15 @@ def route_place_post(id):
         abort(404)
     req = request.get_json()
     if type(req) is not dict:
-        abort(400, description="Not a JSON")
+        return make_response(jsonify({'error': 'Not a JSON'}), 400)
     if 'user_id' not in req:
-        make_response(jsonify({'error': 'Missing user_id'}), 400)
+        return make_response(jsonify({'error': 'Missing user_id'}), 400)
     print(req)
     user = storage.get(User, req['user_id'])
     if user is None:
         abort(404)
     if 'name' not in req:
-        make_response(jsonify({'error': 'Missing name'}), 400)
+        return make_response(jsonify({'error': 'Missing name'}), 400)
     place = Place(**req)
     setattr(place, 'city_id', id)
     place.save()
