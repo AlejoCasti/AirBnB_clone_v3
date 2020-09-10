@@ -45,7 +45,8 @@ def route_city_delete(id):
         abort(404)
     obj.delete()
     storage.save()
-    return jsonify({}), 200
+    #return jsonify({}), 200
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/states/<id>/cities', strict_slashes=False, methods=['POST'])
