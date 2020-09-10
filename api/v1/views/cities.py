@@ -15,10 +15,9 @@ def route_state_city(id):
     if state is None:
         abort(404)
     cities = [obj.to_dict() for obj in
-              list(storage.all(City).values()) if obj.state_id == id]
-    if len(cities) == 0:
-        abort(404)
+              state.cities if obj.state_id == id]
     return jsonify(cities)
+
 
 @app_views.route('/cities/<id>', strict_slashes=False, methods=['GET'])
 def route_city_id(id):
@@ -37,7 +36,7 @@ def route_city_delete(id):
         abort(404)
     obj.delete()
     storage.save()
-    return jsonify({}), 200
+    return jsonify({})
 
 
 @app_views.route('/states/<id>/cities', strict_slashes=False, methods=['POST'])
@@ -47,12 +46,12 @@ def route_city_post(id):
     if not state:
         abort(404)
     req = request.get_json()
-    if not req:
+    if type(req) is not dict:
         abort(400, description="Not a JSON")
     if 'name' not in req:
         abort(400, description="Missing name")
     city = City(**req)
-    city.id = state.id
+    setattr(city, 'state_id', id)
     city.save()
     return make_response(jsonify(city.to_dict()), 201)
 
@@ -70,5 +69,5 @@ def route_city_put(id):
     for key, value in req.items():
         if key not in ignore_values:
             setattr(obj, key, value)
-    storage.save()
-    return jsonify(obj.to_dict()), 200
+    obj.save()
+    return jsonify(obj.to_dict())
