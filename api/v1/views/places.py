@@ -5,7 +5,16 @@ from flask import jsonify, abort, make_response, request
 from models import storage
 from models.city import City
 from models.place import Place
+from models.user import User
 from json import loads
+
+
+@app_views.route('/places', strict_slashes=False, methods=['GET'])
+def route_places():
+    ''' all user's object '''
+    users = list(storage.all(Place).values())
+    dic = [obj.to_dict() for obj in users]
+    return jsonify(dic)
 
 
 @app_views.route('/cities/<id>/places', strict_slashes=False, methods=['GET'])
@@ -39,7 +48,7 @@ def route_place_delete(id):
     return jsonify({})
 
 
-@app_views.route('/states/<id>/cities', strict_slashes=False, methods=['POST'])
+@app_views.route('/cities/<id>/places', strict_slashes=False, methods=['POST'])
 def route_place_post(id):
     ''' post object '''
     city = storage.get(City, id)
@@ -50,7 +59,8 @@ def route_place_post(id):
         abort(400, description="Not a JSON")
     if 'user_id' not in req:
         make_response(jsonify({'error': 'Missing user_id'}), 400)
-    user = storage.get(User, req.user_id)
+    print(req)
+    user = storage.get(User, req['user_id'])
     if user is None:
         abort(404)
     if 'name' not in req:
