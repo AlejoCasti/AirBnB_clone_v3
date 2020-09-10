@@ -20,14 +20,6 @@ def route_state_city(id):
         abort(404)
     return jsonify(cities)
 
-
-@app_views.route('/cities', strict_slashes=False, methods=['GET'])
-def route_city():
-    ''' all city's object '''
-    return jsonify([obj.to_dict() for obj in
-                    list(storage.all(City).values())])
-
-
 @app_views.route('/cities/<id>', strict_slashes=False, methods=['GET'])
 def route_city_id(id):
     ''' search a city with specific id '''
