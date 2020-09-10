@@ -44,17 +44,17 @@ def route_city_delete(id):
 def route_city_post(id):
     ''' post object '''
     state = storage.get(State, id)
-    if state is None:
+    if not state:
         abort(404)
     req = request.get_json()
-    if type(req) is not dict:
-        return make_response(jsonify({'error': 'Not a JSON'}), 400)
+    if not req:
+        abort(400, description="Not a JSON")
     if 'name' not in req:
-        return make_response(jsonify({'error': 'Missing name'}), 400)
+        abort(400, description="Missing name")
     city = City(**req)
-    setattr(city, 'state_id', id)
+    city.id = state.id
     city.save()
-    return jsonify(city.to_dict()), 201
+    return make_response(jsonify(city.to_dict()), 201)
 
 
 @app_views.route('/cities/<id>', strict_slashes=False, methods=['PUT'])
