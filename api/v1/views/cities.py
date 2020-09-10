@@ -14,21 +14,20 @@ def route_state_city(id):
     state = storage.get(State, id)
     if state is None:
         abort(404)
-    #cities = [obj.to_dict() for obj in
-     #         list(storage.all(City).values()) if obj.state_id == id]
-    _cities = []
-    for city in state.cities:
-        _cities.append(city.to_dict())
-    if len(_cities) == 0:
+    cities = [obj.to_dict() for obj in
+              list(storage.all(City).values()) if obj.state_id == id]
+    if len(cities) == 0:
         abort(404)
-    return jsonify(_cities)
+    return jsonify(cities)
 
 
-@app_views.route('/cities', strict_slashes=False, methods=['GET'])
-def route_city():
+@app_views.route('/cities/<id>/', strict_slashes=False, methods=['GET'])
+def route_city(id):
     ''' all city's object '''
-    return jsonify([obj.to_dict() for obj in
-                    list(storage.all(City).values())])
+    city = storage.get(City, id)
+    if not city:
+        abort(404)
+    return jsonify(city.to_dict())
 
 
 @app_views.route('/cities/<id>', strict_slashes=False, methods=['GET'])
