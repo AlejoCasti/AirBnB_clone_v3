@@ -10,7 +10,8 @@ from os import environ
 from flask import abort, jsonify, make_response, request
 
 
-@app_views.route('places/<id>/amenities', methods=['GET'], strict_slashes=False)
+@app_views.route('places/<id>/amenities', methods=['GET'],
+                 strict_slashes=False)
 def get_place_amenities(id):
     """
     Retrieves the list of all Amenity objects of a Place
