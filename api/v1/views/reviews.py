@@ -10,7 +10,7 @@ from json import loads
 
 
 @app_views.route('/places/<id>/reviews', strict_slashes=False, methods=['GET'])
-def route_state_place(id):
+def route_state_review(id):
     ''' all place's object '''
     place = storage.get(Place, id)
     if place is None:
@@ -21,7 +21,7 @@ def route_state_place(id):
 
 
 @app_views.route('/reviews/<id>', strict_slashes=False, methods=['GET'])
-def route_place_id(id):
+def route_review_id(id):
     ''' search a place with specific id '''
     obj = storage.get(Review, id)
     if obj is None:
@@ -30,7 +30,7 @@ def route_place_id(id):
 
 
 @app_views.route('/reviews/<id>', strict_slashes=False, methods=['DELETE'])
-def route_place_delete(id):
+def route_review_delete(id):
     ''' delete object '''
     obj = storage.get(Review, id)
     if obj is None:
@@ -40,9 +40,8 @@ def route_place_delete(id):
     return jsonify({})
 
 
-@app_views.route('/places/<id>/reviews',
-                 strict_slashes=False, methods=['POST'])
-def route_place_post(id):
+@app_views.route('/places/<id>/reviews', strict_slashes=False, methods=['POST'])
+def route_review_post(id):
     ''' post object '''
     place = storage.get(Place, id)
     if place is None:
@@ -65,7 +64,7 @@ def route_place_post(id):
 
 
 @app_views.route('/reviews/<id>', strict_slashes=False, methods=['PUT'])
-def route_place_put(id):
+def route_review_put(id):
     ''' search a place with specific id '''
     ignore_values = ['id', 'created_at', 'updated_at', 'place_id', 'user_id']
     req = request.get_json()
