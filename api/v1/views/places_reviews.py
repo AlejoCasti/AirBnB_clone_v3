@@ -40,7 +40,8 @@ def route_review_delete(id):
     return jsonify({})
 
 
-@app_views.route('/places/<id>/reviews', strict_slashes=False, methods=['POST'])
+@app_views.route('/places/<id>/reviews',
+                 strict_slashes=False, methods=['POST'])
 def route_review_post(id):
     ''' post object '''
     place = storage.get(Place, id)
